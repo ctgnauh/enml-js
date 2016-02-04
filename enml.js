@@ -100,6 +100,15 @@
     var entities = require('entities');
 
     var text = enml || '';
+
+    var medias = text.match(/<en-media hash=\"[a-z0-9]{32}\" type=\"\w+\/\w+\"\><\/en-media>/g);
+    for (var i=0; i<medias.length; i++) {
+      var media = medias[i];
+      var hash = media.match(/[a-z0-9]{32}/i)[0];
+      var type = media.match(/(image|audio|application)/g)[0];
+      text = text.replace(media, type+':'+hash);
+    }
+
     text = text.replace(/(\r\n|\n|\r)/gm," ");
     text = text.replace(/(<\/(div|ui|li|p|table|tr|dl)>)/ig,"\n");
     text = text.replace(/^\s/gm,"");
